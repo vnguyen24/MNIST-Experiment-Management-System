@@ -29,38 +29,45 @@ class Net(nn.Module):
         x = F.log_softmax(self.fc4(x), dim=1)
         return x
 
-def train_model(model, trainloader, criterion, optimizer, epochs):
-    start_time = time.time()  # Start time
-    for epoch in range(epochs):
-        running_loss = 0
-        for images, labels in trainloader:
-            images = images.view(images.shape[0], -1)
-            optimizer.zero_grad()
-            output = model(images)
-            loss = criterion(output, labels)
-            loss.backward()
-            optimizer.step()
-            running_loss += loss.item()
-        # Optional: Log the loss per epoch here
-    end_time = time.time()  # End time
-    training_time = end_time - start_time  # Calculate training duration
-    return training_time  # Return the training duration
+class MNISTModel:
+    def __init__(self):
+        pass
+
+    def train_model(self, model, trainloader, criterion, optimizer, epochs, progress_update):
+        start_time = time.time()  # Start time
+        for epoch in range(epochs):
+            running_loss = 0
+            for batch_id, (images, labels) in enumerate(trainloader):
+                images = images.view(images.shape[0], -1)
+                optimizer.zero_grad()
+                output = model(images)
+                loss = criterion(output, labels)
+                loss.backward()
+                optimizer.step()
+                running_loss += loss.item()
+                progress_data = {
+                    'epoch number': f"Epoch [{epoch+1}/{epochs}]",
+                    'completion of epoch': f"{round(batch_id / (len(trainloader)-1) * 100, 3)}%",
+                    'time': f"{round(time.time() - start_time, 2)} seconds"
+                }
+                progress_update(progress_data)
+        return
 
 
-def evaluate_model(model, testloader):
-    correct = 0
-    total = 0
-    with torch.no_grad():
-        for images, labels in testloader:
-            images = images.view(images.shape[0], -1)
-            outputs = model(images)
-            _, predicted = torch.max(outputs, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-    return 100 * correct / total  # Return accuracy
+    def evaluate_model(self, model, testloader):
+        correct = 0
+        total = 0
+        with torch.no_grad():
+            for images, labels in testloader:
+                images = images.view(images.shape[0], -1)
+                outputs = model(images)
+                _, predicted = torch.max(outputs, 1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
+        return 100 * correct / total  # Return accuracy
 
-def save_model(model, path='mnist_model.pth'):
-    torch.save(model.state_dict(), path)
+    def save_model(self, model, path='mnist_model.pth'):
+        torch.save(model.state_dict(), path)
 
-def load_model(model, path='mnist_model.pth'):
-    model.load_state_dict(torch.load(path))
+    def load_model(self, model, path='mnist_model.pth'):
+        model.load_state_dict(torch.load(path))
