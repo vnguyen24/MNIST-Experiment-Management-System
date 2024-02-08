@@ -12,9 +12,9 @@ class Manager:
         self.socketio = socketio
     
     def start_experiment(self, hyperparams):
-        batch_size = hyperparams.get("batch_size", 64)
-        learning_rate = hyperparams.get("learning_rate", 0.003)
-        epochs = hyperparams.get("epochs", 5)
+        batch_size = hyperparams.get("batch_size")
+        learning_rate = hyperparams.get("learning_rate")
+        epochs = hyperparams.get("epochs")
 
         trainloader, testloader = load_data(batch_size)
         model = Net()
