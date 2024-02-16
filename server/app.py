@@ -16,11 +16,12 @@ def home():
 
 @app.post('/start_experiment')
 def start_experiment():
+    print(f"start experiment called with request: {request.json}")
     obj = {}
     def initialize_key(key):
         d = {'epochs':5, 'batch_size':64, 'learning_rate':0.003}
         try:
-            obj[key] = request.form[key]
+            obj[key] = request.json[key]
         except:
             print(f'{key} key not found in request form. Using a default value of {d[key]}')
             obj[key] = d[key]
