@@ -3,8 +3,10 @@ from flask_socketio import SocketIO
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from server.experiment_manager.manager import Manager
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app) # By default gives access to all origins
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
 manager = Manager(socketio)
@@ -16,12 +18,16 @@ def home():
 
 @app.post('/start_experiment')
 def start_experiment():
+    # print(f"{request.headers}")
     print(f"start experiment called with request: {request.json}")
     obj = {}
     def initialize_key(key):
         d = {'epochs':5, 'batch_size':64, 'learning_rate':0.003}
         try:
-            obj[key] = request.json[key]
+            if key == "learning_rate":
+                obj[key] = float(request.json[key])
+            else:
+                obj[key] = int(request.json[key])
         except:
             print(f'{key} key not found in request form. Using a default value of {d[key]}')
             obj[key] = d[key]

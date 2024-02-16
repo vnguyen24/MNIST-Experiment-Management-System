@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { FormControl, InputLabel, Button, Input } from '@mui/material';
 
+// const socket = io('http://localhost:9000', {
+// 	extraHeaders: { 'Content-Type': 'application/json' },
+// });
+
 const socket = io('http://localhost:9000');
 
 function App() {
 	const [progress, setProgress] = useState();
-	const [epoch, setEpoch] = useState('');
+	const [epochs, setEpochs] = useState('');
 	const [lr, setLr] = useState('');
 	const [size, setSize] = useState('');
 
@@ -36,8 +40,11 @@ function App() {
 		const options = {
 			method: 'POST',
 			//Q: Do we need headers?
+			headers: {
+				'Content-Type': 'application/json',
+			},
 			body: JSON.stringify({
-				epochs: epoch,
+				epochs: epochs,
 				learning_rate: lr,
 				batch_size: size,
 			}),
@@ -50,7 +57,7 @@ function App() {
 	};
 
 	const resetFields = () => {
-		setEpoch('');
+		setEpochs('');
 		setLr('');
 		setSize('');
 	};
@@ -66,15 +73,15 @@ function App() {
 				}}
 			>
 				<FormControl sx={{ m: 2, minWidth: 180 }}>
-					<InputLabel id='epoch'>Epoch</InputLabel>
+					<InputLabel id='epochs'>Epoch</InputLabel>
 					<Input
-						id='epoch'
-						value={epoch}
+						id='epochs'
+						value={epochs}
 						type='number'
 						inputProps={{ min: 1 }}
 						onChange={(e) => {
 							// Handle user invalid input later
-							setEpoch(e.target.value);
+							setEpochs(e.target.value);
 							console.log(e.target.value);
 						}}
 					></Input>
