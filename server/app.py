@@ -18,7 +18,6 @@ def home():
 
 @app.post('/start_experiment')
 def start_experiment():
-    # print(f"{request.headers}")
     print(f"start experiment called with request: {request.json}")
     obj = {}
     def initialize_key(key):
@@ -39,9 +38,13 @@ def start_experiment():
     response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
     return response
 
-@app.route('/api/greet')
-def greet():
-  return jsonify({'message': 'Hello from Flask'})
+@app.route('/create_job', methods=['POST'])
+def create_job():
+    return 0
+
+@app.route('/get_jobs', methods=['GET'])
+def get_jobs():
+    return 0
 
 if __name__ == '__main__':
     socketio.run(app, port=9000)
