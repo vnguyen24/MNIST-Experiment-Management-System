@@ -7,10 +7,13 @@ from server.experiment_manager.manager import Manager
 from flask_cors import CORS
 import pika
 from threading import Thread
+from db.database import connect_to_db
+from db.models.job import Job
+from mongoengine import ValidationError
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 CORS(app) # By default gives access to all origins
-app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
 manager = Manager(socketio)
 
@@ -31,6 +34,8 @@ def callback(ch, method, properties, body):
 channel.basic_consume(queue='task', on_message_callback=callback)
 thread = Thread(target=channel.start_consuming)
 thread.start()
+load_dotenv()
+connect_to_db()
 
 @app.route('/')
 def home():
@@ -76,7 +81,7 @@ def start_experiment(data):
 #     response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
 #     return response
 
-@app.route('/create_job', methods=['POST'])
+@app.post('/create-job')
 def create_job():
     data = request.json
     print(f"create job called with request: {data}")
@@ -86,8 +91,31 @@ def create_job():
         body=json.dumps(data),
         properties=pika.BasicProperties(delivery_mode=2)  # make message persistent / same as above
     )
-    return jsonify({'message': 'Job created successfully'})
-
+    obj = {}
+    def initialize_key(key):
+        d = {'epochs':5, 'batch_size':64, 'learning_rate':0.003}
+        try:
+            if key == "learning_rate":
+                obj[key] = float(request.json[key])
+            else:
+                obj[key] = int(request.json[key])
+        except:
+            print(f'{key} key not found in request form. Using a default value of {d[key]}')
+            obj[key] = d[key]
+    initialize_key('epochs')
+    initialize_key('learning_rate')
+    initialize_key('batch_size')
+    try:
+        message, job = Job.create_or_get_job(epochs=obj["epochs"], learning_rate=obj["learning_rate"], batch_size=obj["batch_size"])
+    except ValidationError as e:
+        return make_response(jsonify({'message': e.message}))
+    job_json = job.to_json()
+    response = make_response(jsonify({
+        'message': message,
+        'data': job_json
+    }), 200)
+    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    return response
 
 @app.route('/get_jobs', methods=['GET'])
 def get_jobs():

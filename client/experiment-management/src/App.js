@@ -35,8 +35,8 @@ function App() {
 		// };
 	}, []);
 
-	const run = () => {
-		const url = 'http://localhost:9000/start_experiment';
+	const submitJob = () => {
+		const url = 'http://localhost:9000/create-job';
 		const options = {
 			method: 'POST',
 			//Q: Do we need headers?
@@ -50,10 +50,20 @@ function App() {
 			}),
 		};
 		fetch(url, options)
-			.then((response) => {
-				return response.text();
-			})
-			.then((text) => console.log(text));
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data.message);
+				// DOUBLE CHECK SYNTAXING!
+				if (data !== null) {
+					if (data.status === true) {
+						// Only true if job is done
+						console.log(`Calculated accuracy: ${data.accuracy}`);
+					} else {
+						console.log('Job currently in queue waiting to be processed');
+					}
+				}
+				console.log(data.data); // data can be null if ValidationError
+			});
 	};
 
 	const resetFields = () => {
@@ -82,7 +92,7 @@ function App() {
 						onChange={(e) => {
 							// Handle user invalid input later
 							setEpochs(e.target.value);
-							console.log(e.target.value);
+							// console.log(e.target.value);
 						}}
 					></Input>
 				</FormControl>
@@ -97,7 +107,7 @@ function App() {
 						onChange={(e) => {
 							// Handle user invalid input later
 							setLr(e.target.value);
-							console.log(e.target.value);
+							// console.log(e.target.value);
 						}}
 					></Input>
 				</FormControl>
@@ -111,7 +121,7 @@ function App() {
 						onChange={(e) => {
 							// Handle user invalid input later
 							setSize(e.target.value);
-							console.log(e.target.value);
+							// console.log(e.target.value);
 						}}
 					></Input>
 				</FormControl>
@@ -125,7 +135,7 @@ function App() {
 					<Button
 						variant='contained'
 						color='secondary'
-						onClick={run}
+						onClick={submitJob}
 						sx={{ m: 3.2, minWidth: 150 }}
 					>
 						Add job
