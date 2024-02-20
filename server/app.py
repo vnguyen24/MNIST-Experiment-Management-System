@@ -23,17 +23,22 @@ try:
 except pika.exceptions.AMQPConnectionError as exc:
     print("Failed to connect to RabbitMQ service. Message wont be sent.")
 
+# Rabbit config
 channel = conn.channel()
 channel.queue_declare(queue='task', durable=True)
-#channel.basic_qos(prefetch_count=1)
+channel.basic_qos(prefetch_count=1)
+
 def callback(ch, method, properties, body):
     print(" Received %s" % json.loads(body))
     print(" Start experiment")
     start_experiment(json.loads(body))
+    # update(): Update information in DB
     ch.basic_ack(delivery_tag=method.delivery_tag)
-channel.basic_consume(queue='task', on_message_callback=callback)
-thread = Thread(target=channel.start_consuming)
-thread.start()
+
+channel.basic_consume(queue='task', on_message_callback=callback) # Setup behavior cua channel
+thread = Thread(target=channel.start_consuming) # Setup behavior cua worker
+thread.start() # Bao worker bat dau lam viec
+
 load_dotenv()
 connect_to_db()
 
@@ -59,38 +64,9 @@ def start_experiment(data):
     initialize_key('batch_size')
     manager.start_experiment(obj)
 
-# @app.post('/start_experiment')
-# def start_experiment():
-#     print(f"start experiment called with request: {request.json}")
-#     obj = {}
-#     def initialize_key(key):
-#         d = {'epochs':5, 'batch_size':64, 'learning_rate':0.003}
-#         try:
-#             if key == "learning_rate":
-#                 obj[key] = float(request.json[key])
-#             else:
-#                 obj[key] = int(request.json[key])
-#         except:
-#             print(f'{key} key not found in request form. Using a default value of {d[key]}')
-#             obj[key] = d[key]
-#     initialize_key('epochs')
-#     initialize_key('learning_rate')
-#     initialize_key('batch_size')
-#     manager.start_experiment(obj)
-#     response = make_response('Experiment finished')
-#     response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-#     return response
-
 @app.post('/create-job')
 def create_job():
     data = request.json
-    print(f"create job called with request: {data}")
-    channel.basic_publish(
-        exchange='',
-        routing_key='task',
-        body=json.dumps(data),
-        properties=pika.BasicProperties(delivery_mode=2)  # make message persistent / same as above
-    )
     obj = {}
     def initialize_key(key):
         d = {'epochs':5, 'batch_size':64, 'learning_rate':0.003}
@@ -107,6 +83,14 @@ def create_job():
     initialize_key('batch_size')
     try:
         message, job = Job.create_or_get_job(epochs=obj["epochs"], learning_rate=obj["learning_rate"], batch_size=obj["batch_size"])
+        if message == "Created new job":
+            print(f"create job called with request: {data}")
+            channel.basic_publish(
+                exchange='',
+                routing_key='task',
+                body=json.dumps(data),
+                properties=pika.BasicProperties(delivery_mode=2)  # make message persistent / same as above
+            )
     except ValidationError as e:
         return make_response(jsonify({'message': e.message}))
     job_json = job.to_json()

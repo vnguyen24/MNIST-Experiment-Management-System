@@ -22,8 +22,8 @@ function App() {
 		const handleExperimentDone = () => {
 			console.log('Experiment completed. Closing WebSocket.');
 			// socket.close(); // Close the WebSocket connection
-			socket.off('response', handleResponse);
-			socket.off('experiment_done', handleExperimentDone);
+			// socket.off('response', handleResponse);
+			// socket.off('experiment_done', handleExperimentDone);
 		};
 
 		socket.on('response', handleResponse);
