@@ -4,21 +4,24 @@ import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from server.experiment_manager.manager import Manager
 from flask_cors import CORS
+from db.database import connect_to_db
+from db.models.job import Job
+from mongoengine import ValidationError
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 CORS(app) # By default gives access to all origins
-app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
 manager = Manager(socketio)
-
+load_dotenv()
+connect_to_db()
 
 @app.route('/')
 def home():
     return 'Welcome to the Flask server'
 
-@app.post('/start_experiment')
+@app.post('/start-experiment')
 def start_experiment():
-    # print(f"{request.headers}")
     print(f"start experiment called with request: {request.json}")
     obj = {}
     def initialize_key(key):
@@ -39,9 +42,34 @@ def start_experiment():
     response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
     return response
 
-@app.route('/api/greet')
-def greet():
-  return jsonify({'message': 'Hello from Flask'})
+@app.post('/create-job')
+def create_job():
+    print(f"create job called with request: {request.json}")
+    obj = {}
+    def initialize_key(key):
+        d = {'epochs':5, 'batch_size':64, 'learning_rate':0.003}
+        try:
+            if key == "learning_rate":
+                obj[key] = float(request.json[key])
+            else:
+                obj[key] = int(request.json[key])
+        except:
+            print(f'{key} key not found in request form. Using a default value of {d[key]}')
+            obj[key] = d[key]
+    initialize_key('epochs')
+    initialize_key('learning_rate')
+    initialize_key('batch_size')
+    try:
+        message, job = Job.create_or_get_job(epochs=obj["epochs"], learning_rate=obj["learning_rate"], batch_size=obj["batch_size"])
+    except ValidationError as e:
+        return make_response(jsonify({'message': e.message}))
+    job_json = job.to_json()
+    response = make_response(jsonify({
+        'message': message,
+        'data': job_json
+    }), 200)
+    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    return response
 
 if __name__ == '__main__':
     socketio.run(app, port=9000)
