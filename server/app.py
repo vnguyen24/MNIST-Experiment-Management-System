@@ -71,5 +71,9 @@ def create_job():
     response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
     return response
 
+@app.route('/get_jobs', methods=['GET'])
+def get_jobs():
+    return 0
+
 if __name__ == '__main__':
     socketio.run(app, port=9000)
