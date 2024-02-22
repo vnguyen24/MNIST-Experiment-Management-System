@@ -53,16 +53,17 @@ function App() {
 			.then((response) => response.json())
 			.then((data) => {
 				console.log(data.message);
+				const job = JSON.parse(data.data);
+				console.log(job);
 				// DOUBLE CHECK SYNTAXING!
-				if (data !== null) {
-					if (data.status === true) {
+				if (job !== null) {
+					if (job.status === true) {
 						// Only true if job is done
-						console.log(`Calculated accuracy: ${data.accuracy}`);
+						console.log(`Calculated accuracy: ${job.accuracy}%`);
 					} else {
 						console.log('Job currently in queue waiting to be processed');
 					}
 				}
-				console.log(data.data); // data can be null if ValidationError
 			});
 	};
 
