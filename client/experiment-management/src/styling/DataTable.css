@@ -1,0 +1,30 @@
+.table-div {
+	width: 80%;
+	margin: auto;
+	margin-top: 50px;
+
+	.table-headline {
+		font-size: 28px;
+		font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+		display: flex;
+		justify-content: center;
+		margin-bottom: 20px;
+	}
+
+	.table {
+		display: flex;
+		padding: 10px;
+
+		.goldRow {
+			background-color: gold !important;
+		}
+
+		.silverRow {
+			background-color: silver !important;
+		}
+
+		.bronzeRow {
+			background-color: burlywood !important;
+		}
+	}
+}
