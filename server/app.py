@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from server.experiment_manager.manager import Manager
 from flask_cors import CORS
 import pika
+import threading
 from threading import Thread
 from db.database import connect_to_db
 from db.models.job import Job
@@ -38,7 +39,7 @@ def callback(ch, method, properties, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_consume(queue='task', on_message_callback=callback) # Setup behavior cua channel
-thread = Thread(target=channel.start_consuming) # Setup behavior cua worker
+thread = Thread(target=channel.start_consuming, daemon=True) # Setup behavior cua worker
 thread.start() # Bao worker bat dau lam viec
 
 load_dotenv()
@@ -84,9 +85,14 @@ def create_job():
     response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
     return response
 
-@app.route('/get_jobs', methods=['GET'])
+@app.get('/get-jobs')
 def get_jobs():
-    return 0
+    objs = Job.objects.order_by("-accuracy").limit(50)
+    response = make_response(jsonify({
+        'message': 'Here are the best job configurations',
+        'data': objs.to_json()
+    }))
+    return response
 
 if __name__ == '__main__':
     socketio.run(app, port=9000)
