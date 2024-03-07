@@ -38,7 +38,7 @@ const Form = ({
 							value={lr}
 							type='number'
 							inputProps={{ min: 0, max: 1 }}
-							step='0.00001'
+							step='0.001'
 							onChange={(e) => {
 								setLr(e.target.value);
 							}}

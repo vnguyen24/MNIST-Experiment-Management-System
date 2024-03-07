@@ -45,10 +45,12 @@ class MNISTModel:
                 loss.backward()
                 optimizer.step()
                 running_loss += loss.item()
+                trainloader_len = len(trainloader)
                 progress_data = {
-                    'epoch number': f"Epoch [{epoch+1}/{epochs}]",
-                    'completion of epoch': f"{round(batch_id / (len(trainloader)-1) * 100, 3)}%",
-                    'time': f"{round(time.time() - start_time, 2)} seconds"
+                    'epoch_number': f"Epoch [{epoch+1}/{epochs}]",
+                    'completion_of_epoch': f"{round((batch_id + 1) / trainloader_len * 100, 3)}",
+                    'time': f"{round(time.time() - start_time, 2)}",
+                    'total_progress': f"{round((trainloader_len * epoch + batch_id + 1) / (trainloader_len * epochs) * 100, 3)}"
                 }
                 progress_update(progress_data)
         return

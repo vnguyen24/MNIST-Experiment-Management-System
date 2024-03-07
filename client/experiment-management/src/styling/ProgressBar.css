@@ -1,0 +1,26 @@
+.progress-bar {
+	display: flex;
+	width: 60%;
+	margin-left: auto;
+	border: 3px solid black;
+}
+
+.progress-block {
+	flex: 1;
+	height: 60px;
+	background-color: whitesmoke;
+	margin: 0px 1px; /* Top Right Bottom Left */
+}
+
+/* Adjust margins for the first and last blocks */
+.progress-block:first-child {
+	margin-left: 0;
+}
+
+.progress-block:last-child {
+	margin-right: 0;
+}
+
+.progress-block.active {
+	background-color: black;
+}
