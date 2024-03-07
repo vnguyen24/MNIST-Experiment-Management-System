@@ -21,11 +21,12 @@ const DataTable = ({ table, columns }) => {
 						}
 						return '';
 					}}
-					pageSize={10}
-					rowsPerPageOptions={[5, 10, 25]}
+					pageSizeOptions={[10, 25, 50]}
 					initialState={{
 						pagination: {
-							pageSize: 10,
+							paginationModel: {
+								pageSize: 10,
+							},
 						},
 					}}
 				/>

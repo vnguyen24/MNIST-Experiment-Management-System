@@ -5,17 +5,18 @@
 	margin-left: 25px;
 
 	.form-entry {
+		display: flex;
 		margin-left: 25px;
 		margin-right: 25px;
 		padding: 10px;
 		margin-top: 15px;
 
 		.MuiInputLabel-formControl {
-			color: black !important; /* Set the text color of the InputLabel to black and override any other styles */
+			color: black !important;
 		}
 
 		.MuiInput-underline:after {
-			border-bottom-color: black; /* Change the underline color to black */
+			border-bottom-color: black;
 		}
 	}
 

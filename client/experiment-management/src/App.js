@@ -3,11 +3,15 @@ import io from 'socket.io-client';
 import Header from './components/Header';
 import Form from './components/Form';
 import DataTable from './components/DataTable';
+import ProgressBar from './components/ProgressBar';
 
 const socket = io('http://localhost:9000');
 
 function App() {
-	const [progress, setProgress] = useState();
+	const [progressData, setProgressData] = useState({
+		time: 0,
+		total_progress: 0,
+	});
 	const [epochs, setEpochs] = useState('');
 	const [lr, setLr] = useState('');
 	const [size, setSize] = useState('');
@@ -21,28 +25,28 @@ function App() {
 		{ field: 'run_time', headerName: 'Run_time (seconds)', width: 150 },
 	];
 
+	const getJobs = () => {
+		const url = 'http://localhost:9000/get-jobs';
+		fetch(url)
+			.then((response) => response.json())
+			.then((data) => {
+				const jsonData = JSON.parse(data.data);
+				const formattedData = jsonData.map((item) => {
+					const id = item._id.$oid;
+					return { id, ...item };
+				});
+				setTable(formattedData);
+			})
+			.catch((error) => console.error('Fetch error:', error));
+	};
+
 	useEffect(() => {
-		const getJobs = () => {
-			const url = 'http://localhost:9000/get-jobs';
-			fetch(url)
-				.then((response) => response.json())
-				.then((data) => {
-					const jsonData = JSON.parse(data.data);
-					const formattedData = jsonData.map((item) => {
-						const id = item._id.$oid;
-						return { id, ...item };
-					});
-					setTable(formattedData);
-				})
-				.catch((error) => console.error('Fetch error:', error));
-		};
-
-		if (table.length !== 0) {
-			console.log('setTable done. Table is: ', table);
-		}
-
 		const handleResponse = (data) => {
-			setProgress(data);
+			const { time, total_progress } = data;
+			setProgressData({
+				time: parseFloat(time),
+				total_progress: parseFloat(total_progress),
+			});
 		};
 
 		const handleExperimentDone = () => {
@@ -59,7 +63,7 @@ function App() {
 			socket.off('response', handleResponse);
 			socket.off('experiment_done', handleExperimentDone);
 		};
-	}, [table]);
+	}, []);
 
 	const submitJob = () => {
 		const url = 'http://localhost:9000/create-job';
@@ -110,7 +114,7 @@ function App() {
 				submitJob={submitJob}
 				resetFields={resetFields}
 			/>
-			{progress && JSON.stringify(progress)}
+			<ProgressBar progressData={progressData} />
 			<DataTable table={table} columns={columns} />
 		</div>
 	);
