@@ -87,7 +87,7 @@ def create_job():
 
 @app.get('/get-jobs')
 def get_jobs():
-    objs = Job.objects.order_by("-accuracy").limit(50)
+    objs = Job.objects.order_by("-accuracy").limit(10)
     response = make_response(jsonify({
         'message': 'Here are the best job configurations',
         'data': objs.to_json()

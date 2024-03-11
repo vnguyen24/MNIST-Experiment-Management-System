@@ -1,26 +1,26 @@
 .progress-bar {
 	display: flex;
-	width: 60%;
-	margin-left: auto;
-	border: 3px solid black;
-}
+	flex-direction: row !important;
+	/* height: 100%;
+	width: 100%;
+	border: 3px solid black; */
 
-.progress-block {
-	flex: 1;
-	height: 60px;
-	background-color: whitesmoke;
-	margin: 0px 1px; /* Top Right Bottom Left */
-}
+	.progress-block {
+		background-color: whitesmoke;
+		margin: 0px 1px; /* Top Right Bottom Left */
+		width: 10%;
+	}
 
-/* Adjust margins for the first and last blocks */
-.progress-block:first-child {
-	margin-left: 0;
-}
+	/* Adjust margins for the first and last blocks */
+	.progress-block:first-child {
+		margin-left: 0;
+	}
 
-.progress-block:last-child {
-	margin-right: 0;
-}
+	.progress-block:last-child {
+		margin-right: 0;
+	}
 
-.progress-block.active {
-	background-color: black;
+	.progress-block.active {
+		background-color: black;
+	}
 }
