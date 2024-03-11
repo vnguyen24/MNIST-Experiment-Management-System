@@ -4,6 +4,11 @@ import Header from './components/Header';
 import Form from './components/Form';
 import DataTable from './components/DataTable';
 import ProgressBar from './components/ProgressBar';
+import MessageBoard from './components/MessageBoard';
+import Message from './components/Message';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import './App.css';
 
 const socket = io('http://localhost:9000');
 
@@ -16,6 +21,7 @@ function App() {
 	const [lr, setLr] = useState('');
 	const [size, setSize] = useState('');
 	const [table, setTable] = useState([]);
+	const [messages, setMessages] = useState([]);
 
 	const columns = [
 		{ field: 'batch_size', headerName: 'Batch_size', width: 150 },
@@ -36,6 +42,7 @@ function App() {
 					return { id, ...item };
 				});
 				setTable(formattedData);
+				// console.log(formattedData);
 			})
 			.catch((error) => console.error('Fetch error:', error));
 	};
@@ -60,12 +67,18 @@ function App() {
 		getJobs();
 
 		return () => {
+			// Not sure if needed
 			socket.off('response', handleResponse);
 			socket.off('experiment_done', handleExperimentDone);
 		};
 	}, []);
 
 	const submitJob = () => {
+		const submitMessage = <Message message={`Job sumitted!`}></Message>;
+
+		// Using setState's callback to ensure submitMessage is added before doneMessage
+		setMessages((prevMessages) => [submitMessage, ...prevMessages]);
+
 		const url = 'http://localhost:9000/create-job';
 		const options = {
 			method: 'POST',
@@ -83,14 +96,19 @@ function App() {
 			.then((response) => response.json())
 			.then((data) => {
 				console.log(data.message);
+				let messageContent = data.message;
 				const job = JSON.parse(data.data);
 				console.log(job);
 				if (job !== null) {
 					if (job.status === true) {
-						console.log(`Calculated accuracy: ${job.accuracy}%`);
+						messageContent += `\nCalculated accuracy: ${job.accuracy}%`;
 					} else {
-						console.log('Job currently in queue waiting to be processed');
+						messageContent += `\nJob currently in queue waiting to be processed`;
 					}
+					const doneMessage = <Message message={messageContent} />;
+
+					// Using setState's callback to ensure doneMessage is added after submitMessage
+					setMessages((prevMessages) => [doneMessage, ...prevMessages]);
 				}
 			});
 	};
@@ -102,20 +120,53 @@ function App() {
 	};
 
 	return (
-		<div>
-			<Header />
-			<Form
-				epochs={epochs}
-				lr={lr}
-				size={size}
-				setEpochs={setEpochs}
-				setLr={setLr}
-				setSize={setSize}
-				submitJob={submitJob}
-				resetFields={resetFields}
-			/>
-			<ProgressBar progressData={progressData} />
-			<DataTable table={table} columns={columns} />
+		<div className='main-container'>
+			<div className='top-container'>
+				<div className='left-container'>
+					<div className='header-container'>
+						<div className='gear-comp'>
+							<h1>GEAR</h1>
+						</div>
+						<div className='header-comp'>
+							<Header id='header' />
+						</div>
+					</div>
+					<div className='form-container'>
+						<div className='form-comp'>
+							<Form
+								epochs={epochs}
+								lr={lr}
+								size={size}
+								setEpochs={setEpochs}
+								setLr={setLr}
+								setSize={setSize}
+								submitJob={submitJob}
+								resetFields={resetFields}
+							/>
+						</div>
+					</div>
+				</div>
+				<div className='right-container'>
+					<div className='message-board-container'>
+						<div className='message-board-comp'>
+							<h1>MESSAGE BOARD</h1>
+						</div>
+					</div>
+					<div className='progress-bar-container'>
+						<div className='progress-bar-comp'>
+							<ProgressBar progressData={progressData} />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className='bot-container'>
+				<div className='job-board-comp'>
+					<DataTable table={table} columns={columns} />
+				</div>
+			</div>
+			{/* {progressData && JSON.stringify(progressData)} */}
+			{/* <MessageBoard messages={messages}></MessageBoard> */}
+			{/* <DataTable table={table} columns={columns} /> */}
 		</div>
 	);
 }

@@ -1,0 +1,116 @@
+html,
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+/*Borders + margins to visualize the boxes*/
+.main-container {
+	display: flex;
+	border: 1px solid black;
+	flex-direction: column;
+
+	.top-container {
+		display: flex;
+		flex-direction: row;
+		margin: 1px;
+		border: 2px solid orange;
+		height: 600px;
+
+		.left-container {
+			display: flex;
+			flex-direction: column;
+			margin: 1px;
+			border: 2px solid blue;
+			width: 35%;
+
+			.header-container {
+				display: flex;
+				flex-direction: row;
+				margin: 1px;
+				border: 2px solid red;
+				height: 20%;
+
+				.gear-comp {
+					margin: 1px;
+					border: 2px solid black;
+					width: 30%;
+				}
+
+				.header-comp {
+					margin: 1px;
+					border: 2px solid black;
+					width: 70%;
+				}
+			}
+
+			.form-container {
+				display: flex;
+				justify-content: flex-end;
+				margin: 1px;
+				border: 2px solid red;
+				height: 80%;
+
+				.form-comp {
+					margin: 1px;
+					border: 2px solid black;
+					height: 100%;
+					width: 80%;
+				}
+			}
+		}
+
+		.right-container {
+			display: flex;
+			flex-direction: column;
+			margin: 1px;
+			border: 2px solid blue;
+			width: 65%;
+
+			.message-board-container {
+				display: flex;
+				justify-content: flex-end;
+				margin: 1px;
+				border: 2px solid red;
+				height: 70%;
+
+				.message-board-comp {
+					margin: 1px;
+					border: 2px solid black;
+					height: 100%;
+					width: 70%;
+				}
+			}
+
+			.progress-bar-container {
+				display: flex;
+				align-items: flex-end;
+				margin: 1px;
+				border: 2px solid red;
+				height: 30%;
+
+				.progress-bar-comp {
+					margin: 1px;
+					border: 2px solid black;
+					height: 50%;
+					width: 100%;
+				}
+			}
+		}
+	}
+
+	.bot-container {
+		display: flex;
+		justify-content: center;
+		margin: 1px;
+		border: 2px solid orange;
+		height: 600px;
+
+		.job-board-comp {
+			margin: 1px;
+			border: 2px solid black;
+			width: 80%;
+		}
+	}
+}
