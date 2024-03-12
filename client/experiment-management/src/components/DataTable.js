@@ -2,7 +2,7 @@ import React from 'react';
 import Table from 'react-bootstrap/Table';
 import '../styling/DataTable.css';
 
-const DataTable = ({ table, columns }) => {
+const DataTable = ({ table }) => {
 	if (!table || table.length === 0) {
 		return <div>No data available!</div>;
 	}
@@ -28,28 +28,31 @@ const DataTable = ({ table, columns }) => {
 	};
 
 	return (
-		<Table bordered hover>
-			<thead>
-				<tr>
-					<th>Epochs</th>
-					<th>Learning Rate</th>
-					<th>Batch Size</th>
-					<th>Accuracy (%)</th>
-					<th>Run Time (seconds)</th>
-				</tr>
-			</thead>
-			<tbody>
-				{cleanData.map((row, index) => (
-					<tr key={row.id} className={getRowClass(index)}>
-						<td>{row.epochs}</td>
-						<td>{row.learning_rate}</td>
-						<td>{row.batch_size}</td>
-						<td>{row.accuracy}</td>
-						<td>{row.run_time}</td>
+		<div>
+			<p className='title'>Top job configurations</p>
+			<Table bordered hover>
+				<thead>
+					<tr>
+						<th>Epochs</th>
+						<th>Learning Rate</th>
+						<th>Batch Size</th>
+						<th>Accuracy (%)</th>
+						<th>Run Time (seconds)</th>
 					</tr>
-				))}
-			</tbody>
-		</Table>
+				</thead>
+				<tbody>
+					{cleanData.map((row, index) => (
+						<tr key={row.id}>
+							<td className={getRowClass(index)}>{row.epochs}</td>
+							<td className={getRowClass(index)}>{row.learning_rate}</td>
+							<td className={getRowClass(index)}>{row.batch_size}</td>
+							<td className={getRowClass(index)}>{row.accuracy}</td>
+							<td className={getRowClass(index)}>{row.run_time}</td>
+						</tr>
+					))}
+				</tbody>
+			</Table>
+		</div>
 	);
 };
 

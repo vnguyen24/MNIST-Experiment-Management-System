@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
+import '../styling/MessageBoard.css';
+import Message from './Message';
 
 const MessageBoard = ({ messages }) => {
+	if (!messages || messages.length === 0) {
+		return <h1>Nothing to show here!</h1>;
+	}
 	return (
-		<div>
-			{messages.map((message, index) => (
-				<div key={index}>{message}</div>
+		<div className='message-board'>
+			{messages.map((item, index) => (
+				<Message key={index} time={item.time} message={item.message} />
 			))}
 		</div>
 	);

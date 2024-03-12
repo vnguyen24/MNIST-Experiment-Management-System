@@ -14,9 +14,9 @@ const SimpleForm = ({
 	resetFields,
 }) => {
 	return (
-		<div class='h-100 d-inline-block w-100 p-3 border border-black border-5'>
-			<Form class='h-100 w-100'>
-				<Form.Group class='my-3'>
+		<div className='h-100 d-inline-block w-100 p-3 border border-black border-5'>
+			<Form className='h-100 w-100'>
+				<Form.Group className='my-3'>
 					<Form.Label>Epochs</Form.Label>
 					<Form.Control
 						type='number'
@@ -28,7 +28,7 @@ const SimpleForm = ({
 						}}
 					/>
 				</Form.Group>
-				<Form.Group class='my-3'>
+				<Form.Group className='my-3'>
 					<Form.Label>Learning rate</Form.Label>
 					<Form.Control
 						type='number'
@@ -41,7 +41,7 @@ const SimpleForm = ({
 						}}
 					/>
 				</Form.Group>
-				<Form.Group class='my-3'>
+				<Form.Group className='my-3'>
 					<Form.Label>Batch Size</Form.Label>
 					<Form.Control
 						type='number'
@@ -55,7 +55,7 @@ const SimpleForm = ({
 				</Form.Group>
 				<div className='button-container'>
 					<Button className='submit-button' variant='light' onClick={submitJob}>
-						<i class='bi bi-send-fill pe-2' />
+						<i className='bi bi-send-fill pe-2' />
 						Add Job
 					</Button>
 					<Button
@@ -63,7 +63,7 @@ const SimpleForm = ({
 						variant='light'
 						onClick={resetFields}
 					>
-						<i class='bi bi-trash-fill pe-2'></i>
+						<i className='bi bi-trash-fill pe-2'></i>
 						Discard
 					</Button>
 				</div>
