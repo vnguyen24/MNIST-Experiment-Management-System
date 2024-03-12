@@ -4,7 +4,11 @@ import '../styling/DataTable.css';
 
 const DataTable = ({ table }) => {
 	if (!table || table.length === 0) {
-		return <div>No data available!</div>;
+		return (
+			<p className='text-center fs-1 fw-medium text-decoration-underline'>
+				No data available!
+			</p>
+		);
 	}
 
 	const cleanData = table.map((item) => ({
@@ -24,6 +28,8 @@ const DataTable = ({ table }) => {
 				return 'silver';
 			case 2:
 				return 'bronze';
+			default:
+				return '';
 		}
 	};
 
