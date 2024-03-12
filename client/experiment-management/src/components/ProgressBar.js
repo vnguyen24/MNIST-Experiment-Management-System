@@ -2,7 +2,7 @@ import React from 'react';
 import '../styling/ProgressBar.css';
 
 const ProgressBar = ({ progressData }) => {
-	const { time, total_progress } = progressData;
+	const { total_progress } = progressData;
 
 	if (!progressData) {
 		return <h1>Nothing here!</h1>;

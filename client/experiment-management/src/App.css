@@ -21,26 +21,31 @@ body {
 		.left-container {
 			display: flex;
 			flex-direction: column;
-			margin: 1px;
-			border: 2px solid blue;
+			/* margin: 1px;
+			border: 2px solid blue; */
 			width: 35%;
 
 			.header-container {
 				display: flex;
 				flex-direction: row;
-				margin: 1px;
-				border: 2px solid red;
+				/* margin: 1px;
+				border: 2px solid red; */
 				height: 20%;
 
 				.gear-comp {
-					margin: 1px;
-					border: 2px solid black;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					/* margin: 1px;
+					border: 2px solid black; */
 					width: 30%;
+					padding-bottom: 10px;
+					padding-right: 10px;
 				}
 
 				.header-comp {
-					margin: 1px;
-					border: 2px solid black;
+					/* margin: 1px;
+					border: 2px solid black; */
 					width: 70%;
 				}
 			}
@@ -48,13 +53,13 @@ body {
 			.form-container {
 				display: flex;
 				justify-content: flex-end;
-				margin: 1px;
-				border: 2px solid red;
+				/* margin: 1px;
+				border: 2px solid red; */
 				height: 80%;
 
 				.form-comp {
-					margin: 1px;
-					border: 2px solid black;
+					/* margin: 1px;
+					border: 2px solid black; */
 					height: 100%;
 					width: 80%;
 				}
@@ -70,29 +75,48 @@ body {
 
 			.message-board-container {
 				display: flex;
-				justify-content: flex-end;
+				flex-direction: column;
+				align-items: flex-end;
 				margin: 1px;
 				border: 2px solid red;
 				height: 70%;
 
-				.message-board-comp {
+				.message-board-title {
+					display: flex;
+					height: 10%;
+					width: 70%;
 					margin: 1px;
 					border: 2px solid black;
-					height: 100%;
+				}
+
+				.message-board-table {
+					display: flex;
+					flex-direction: column;
+					margin: 1px;
+					border: 2px solid black;
+					height: 90%;
 					width: 70%;
 				}
 			}
 
 			.progress-bar-container {
 				display: flex;
-				align-items: flex-end;
-				margin: 1px;
-				border: 2px solid red;
+				flex-direction: column;
+				align-items: flex-start;
+				/* margin: 1px;
+				border: 2px solid red; */
 				height: 30%;
 
+				.progress-bar-timer-comp {
+					/* margin: 1px;
+					border: 2px solid black; */
+					height: 50%;
+					width: 40%;
+				}
+
 				.progress-bar-comp {
-					margin: 1px;
-					border: 2px solid black;
+					/* margin: 1px;
+					border: 2px solid black; */
 					height: 50%;
 					width: 100%;
 				}
@@ -103,13 +127,13 @@ body {
 	.bot-container {
 		display: flex;
 		justify-content: center;
-		margin: 1px;
-		border: 2px solid orange;
+		/* margin: 1px;
+		border: 2px solid orange; */
 		height: 600px;
 
 		.job-board-comp {
-			margin: 1px;
-			border: 2px solid black;
+			/* margin: 1px;
+			border: 2px solid black; */
 			width: 80%;
 		}
 	}

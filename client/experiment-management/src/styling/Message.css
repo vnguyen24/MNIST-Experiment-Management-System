@@ -1,0 +1,11 @@
+.message-container {
+	display: flex;
+
+	.time-comp {
+		width: 20%;
+	}
+
+	.message-comp {
+		width: 80%;
+	}
+}

@@ -5,7 +5,8 @@ import Form from './components/Form';
 import DataTable from './components/DataTable';
 import ProgressBar from './components/ProgressBar';
 import MessageBoard from './components/MessageBoard';
-import Message from './components/Message';
+import ProgressTimer from './components/ProgressTimer';
+import Gear from './components/Gear';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './App.css';
@@ -22,14 +23,7 @@ function App() {
 	const [size, setSize] = useState('');
 	const [table, setTable] = useState([]);
 	const [messages, setMessages] = useState([]);
-
-	const columns = [
-		{ field: 'batch_size', headerName: 'Batch_size', width: 150 },
-		{ field: 'epochs', headerName: 'Epochs', width: 150 },
-		{ field: 'learning_rate', headerName: 'Learning_rate', width: 150 },
-		{ field: 'accuracy', headerName: 'Accuracy (%)', width: 150 },
-		{ field: 'run_time', headerName: 'Run_time (seconds)', width: 150 },
-	];
+	const d = new Date();
 
 	const getJobs = () => {
 		const url = 'http://localhost:9000/get-jobs';
@@ -42,7 +36,6 @@ function App() {
 					return { id, ...item };
 				});
 				setTable(formattedData);
-				// console.log(formattedData);
 			})
 			.catch((error) => console.error('Fetch error:', error));
 	};
@@ -74,10 +67,16 @@ function App() {
 	}, []);
 
 	const submitJob = () => {
-		const submitMessage = <Message message={`Job sumitted!`}></Message>;
+		// const submitMessage = {
+		// 	time: d.toLocaleTimeString(),
+		// 	message: 'Job sumitted!',
+		// };
 
-		// Using setState's callback to ensure submitMessage is added before doneMessage
-		setMessages((prevMessages) => [submitMessage, ...prevMessages]);
+		// // Using setState's callback to ensure submitMessage is added before doneMessage
+		// setMessages((prevMessages) => {
+		// 	const newMessages = [submitMessage, ...prevMessages];
+		// 	return newMessages.slice(0, 10);
+		// });
 
 		const url = 'http://localhost:9000/create-job';
 		const options = {
@@ -105,10 +104,16 @@ function App() {
 					} else {
 						messageContent += `\nJob currently in queue waiting to be processed`;
 					}
-					const doneMessage = <Message message={messageContent} />;
+					const doneMessage = {
+						time: d.toLocaleTimeString(),
+						message: messageContent,
+					};
 
 					// Using setState's callback to ensure doneMessage is added after submitMessage
-					setMessages((prevMessages) => [doneMessage, ...prevMessages]);
+					setMessages((prevMessages) => {
+						const newMessages = [doneMessage, ...prevMessages];
+						return newMessages.slice(0, 10);
+					});
 				}
 			});
 	};
@@ -125,7 +130,7 @@ function App() {
 				<div className='left-container'>
 					<div className='header-container'>
 						<div className='gear-comp'>
-							<h1>GEAR</h1>
+							<Gear />
 						</div>
 						<div className='header-comp'>
 							<Header id='header' />
@@ -148,11 +153,17 @@ function App() {
 				</div>
 				<div className='right-container'>
 					<div className='message-board-container'>
-						<div className='message-board-comp'>
-							<h1>MESSAGE BOARD</h1>
+						<div className='message-board-title'>
+							<p className='fs-3 text-center w-100'>MESSAGE BOARD</p>
+						</div>
+						<div className='message-board-table'>
+							<MessageBoard messages={messages}></MessageBoard>
 						</div>
 					</div>
 					<div className='progress-bar-container'>
+						<div className='progress-bar-timer-comp'>
+							<ProgressTimer progressData={progressData} />
+						</div>
 						<div className='progress-bar-comp'>
 							<ProgressBar progressData={progressData} />
 						</div>
@@ -161,12 +172,10 @@ function App() {
 			</div>
 			<div className='bot-container'>
 				<div className='job-board-comp'>
-					<DataTable table={table} columns={columns} />
+					<DataTable table={table} />
 				</div>
 			</div>
 			{/* {progressData && JSON.stringify(progressData)} */}
-			{/* <MessageBoard messages={messages}></MessageBoard> */}
-			{/* <DataTable table={table} columns={columns} /> */}
 		</div>
 	);
 }
