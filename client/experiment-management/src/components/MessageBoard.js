@@ -4,7 +4,11 @@ import Message from './Message';
 
 const MessageBoard = ({ messages }) => {
 	if (!messages || messages.length === 0) {
-		return <h1>Nothing to show here!</h1>;
+		return (
+			<p className='text-center fs-1 fw-medium text-decoration-underline'>
+				No messages yet!
+			</p>
+		);
 	}
 	return (
 		<div className='message-board'>

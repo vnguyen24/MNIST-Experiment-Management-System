@@ -49,14 +49,16 @@ function App() {
 			});
 		};
 
-		const handleExperimentDone = () => {
-			console.log('Experiment completed. Closing WebSocket.');
-			console.log('Updating table');
+		const handleExperimentDone = (data) => {
+			console.log(
+				'Experiment completed. Reporting accuracy and updating table'
+			);
+			findJob(data);
 			getJobs();
 		};
 
 		socket.on('response', handleResponse);
-		socket.once('experiment_done', handleExperimentDone);
+		socket.on('experiment_done', handleExperimentDone);
 		getJobs();
 
 		return () => {
@@ -100,9 +102,10 @@ function App() {
 				console.log(job);
 				if (job !== null) {
 					if (job.status === true) {
-						messageContent += `\nCalculated accuracy: ${job.accuracy}%`;
+						// status only true if job is done + updated to table
+						messageContent += ` Calculated accuracy: ${job.accuracy}%`;
 					} else {
-						messageContent += `\nJob currently in queue waiting to be processed`;
+						messageContent += ` Job currently in queue waiting to be processed`;
 					}
 					const doneMessage = {
 						time: d.toLocaleTimeString(),
@@ -115,6 +118,33 @@ function App() {
 						return newMessages.slice(0, 10);
 					});
 				}
+			});
+	};
+
+	const findJob = (params) => {
+		const queryParams = new URLSearchParams(params).toString();
+		const url = `http://localhost:9000/find-job?${queryParams}`;
+
+		const options = {
+			method: 'GET',
+		};
+
+		fetch(url, options)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data);
+				const job = JSON.parse(data.data);
+				console.log(job);
+				const messageContent = `Job configuration {epochs: ${job.epochs}, learning_rate: ${job.learning_rate}, batch_size: ${job.batch_size}} finished in ${job.run_time} seconds. Calculated accuracy: ${job.accuracy}%`;
+				const doneMessage = {
+					time: d.toLocaleTimeString(),
+					message: messageContent,
+				};
+				// Using setState's callback to ensure doneMessage is added after submitMessage
+				setMessages((prevMessages) => {
+					const newMessages = [doneMessage, ...prevMessages];
+					return newMessages.slice(0, 10);
+				});
 			});
 	};
 

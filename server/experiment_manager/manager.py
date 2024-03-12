@@ -6,6 +6,8 @@ from server.ml_models.mnist_model import Net, load_data, MNISTModel
 import torch.nn as nn
 import torch.optim as optim
 import time
+from db.models.job import Job
+import datetime
 
 class Manager:
     def __init__(self, socketio):
@@ -23,19 +25,21 @@ class Manager:
         mnistmodel = MNISTModel()
         start = time.time()
         mnistmodel.train_model(model, trainloader, criterion, optimizer, epochs, self.progress_update)
+        end = time.time()
+        run_time = round(end-start, 3)
         print(f"Finished training the model")
         accuracy = mnistmodel.evaluate_model(model, testloader)
         mnistmodel.save_model(model)
         print(f"Done with accuracy: {accuracy}%")
+        print("Updating finished job in DB")
+        Job.objects(epochs=epochs, learning_rate=learning_rate, batch_size=batch_size).update_one(set__status=True, set__time_finished=datetime.datetime.now(datetime.UTC), set__run_time=run_time, set__accuracy=accuracy)
         print(f"Closing websocket to avoid memory leaks")
-        self.close_connection()
-        end = time.time()
-        run_time = round(end-start, 3)
+        self.close_connection(hyperparams)
         return (accuracy, run_time)
 
 
     def progress_update(self, progress_data):
         self.socketio.emit('response', progress_data)
 
-    def close_connection(self):
-        self.socketio.emit('experiment_done', {'message': 'Experiment completed.'})
+    def close_connection(self, hyperparams):
+        self.socketio.emit('experiment_done', hyperparams)

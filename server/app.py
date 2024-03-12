@@ -34,8 +34,8 @@ def callback(ch, method, properties, body):
     body = json.loads(body) # Convert to Python dict
     print(" Received %s" % body)
     print(" Start experiment")
-    accuracy, run_time = manager.start_experiment(body)
-    Job.objects(epochs=body['epochs'], learning_rate=body['learning_rate'], batch_size=body['batch_size']).update_one(set__status=True, set__time_finished=datetime.datetime.now(datetime.UTC), set__run_time=run_time, set__accuracy=accuracy)
+    manager.start_experiment(body)
+    # Job.objects(epochs=body['epochs'], learning_rate=body['learning_rate'], batch_size=body['batch_size']).update_one(set__status=True, set__time_finished=datetime.datetime.now(datetime.UTC), set__run_time=run_time, set__accuracy=accuracy)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_consume(queue='task', on_message_callback=callback) # Setup behavior cua channel
@@ -67,7 +67,7 @@ def create_job():
     data['learning_rate'] = initialize_key('learning_rate')
     try:
         message, job = Job.create_or_get_job(epochs=data["epochs"], learning_rate=data["learning_rate"], batch_size=data["batch_size"])
-        if message == "Created new job":
+        if message == "Created new job.":
             print(f"create job called with request: {data}")
             channel.basic_publish(
                 exchange='',
@@ -91,6 +91,18 @@ def get_jobs():
     response = make_response(jsonify({
         'message': 'Here are the best job configurations',
         'data': objs.to_json()
+    }))
+    return response
+
+@app.get('/find-job')
+def find_job():
+    print(f"find-job called with response: {request.args}")
+    epochs = int(request.args.get('epochs'))
+    learning_rate = float(request.args.get('learning_rate'))
+    batch_size = int(request.args.get('batch_size'))
+    job = Job.objects(epochs=epochs, learning_rate=learning_rate, batch_size=batch_size).first() # Guaranteed to be a finished job
+    response = make_response(jsonify({
+        'data': job.to_json()
     }))
     return response
 

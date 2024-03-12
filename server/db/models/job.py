@@ -16,9 +16,9 @@ class Job(Document):
       job = cls.objects(epochs=epochs, learning_rate=learning_rate, batch_size=batch_size).first()
       if job:
           print("A job with this configuration already exists.")
-          return "A job with this configuration already exists", job  # Return the existing job
+          return "A job with this configuration already exists.", job  # Return the existing job
       else:
           # Create a new job with additional kwargs if needed
           new_job = cls(epochs=epochs, learning_rate=learning_rate, batch_size=batch_size)
           new_job.save()  # Don't forget to call save() to persist the new job
-          return "Created new job", new_job
+          return "Created new job.", new_job
