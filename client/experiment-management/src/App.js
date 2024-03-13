@@ -7,6 +7,7 @@ import ProgressBar from './components/ProgressBar';
 import MessageBoard from './components/MessageBoard';
 import ProgressTimer from './components/ProgressTimer';
 import Gear from './components/Gear';
+import ToastContainer from 'react-bootstrap/ToastContainer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './App.css';
@@ -69,17 +70,6 @@ function App() {
 	}, []);
 
 	const submitJob = () => {
-		// const submitMessage = {
-		// 	time: d.toLocaleTimeString(),
-		// 	message: 'Job sumitted!',
-		// };
-
-		// // Using setState's callback to ensure submitMessage is added before doneMessage
-		// setMessages((prevMessages) => {
-		// 	const newMessages = [submitMessage, ...prevMessages];
-		// 	return newMessages.slice(0, 10);
-		// });
-
 		const url = 'http://localhost:9000/create-job';
 		const options = {
 			method: 'POST',
@@ -183,10 +173,10 @@ function App() {
 				</div>
 				<div className='right-container'>
 					<div className='message-board-container'>
-						<div className='message-board-title'>
+						{/* <div className='message-board-title'>
 							<p className='fs-3 text-center w-100'>MESSAGE BOARD</p>
-						</div>
-						<div className='message-board-table'>
+						</div> */}
+						<div className='message-board-table mt-5'>
 							<MessageBoard messages={messages}></MessageBoard>
 						</div>
 					</div>
@@ -205,7 +195,6 @@ function App() {
 					<DataTable table={table} />
 				</div>
 			</div>
-			{/* {progressData && JSON.stringify(progressData)} */}
 		</div>
 	);
 }
