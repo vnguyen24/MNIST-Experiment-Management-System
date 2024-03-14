@@ -7,7 +7,6 @@ import ProgressBar from './components/ProgressBar';
 import MessageBoard from './components/MessageBoard';
 import ProgressTimer from './components/ProgressTimer';
 import Gear from './components/Gear';
-import ToastContainer from 'react-bootstrap/ToastContainer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './App.css';
