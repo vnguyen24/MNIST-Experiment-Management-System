@@ -1,9 +1,5 @@
 import React from 'react';
 import Toast from 'react-bootstrap/Toast';
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 
 const ToastComponent = ({ showToast, setShowToast, message }) => {
 	const messageLines = message.split('\n');
