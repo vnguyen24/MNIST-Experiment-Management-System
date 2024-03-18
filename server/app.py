@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request, make_response
 from flask_socketio import SocketIO
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from server.experiment_manager.manager import Manager
+from experiment_manager.manager import Manager
 from flask_cors import CORS
 import pika
 import threading
@@ -11,7 +11,6 @@ from threading import Thread
 from db.database import connect_to_db
 from db.models.job import Job
 from mongoengine import ValidationError
-from dotenv import load_dotenv
 import datetime
 
 app = Flask(__name__)
@@ -21,7 +20,7 @@ manager = Manager(socketio)
 
 # RabbitMQ connection
 try:
-    conn = pika.BlockingConnection(pika.ConnectionParameters(host="localhost", port=5672))
+    conn = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq", port=5672))
 except pika.exceptions.AMQPConnectionError as exc:
     print("Failed to connect to RabbitMQ service. Message wont be sent.")
 
@@ -35,15 +34,14 @@ def callback(ch, method, properties, body):
     print(" Received %s" % body)
     print(" Start experiment")
     manager.start_experiment(body)
-    # Job.objects(epochs=body['epochs'], learning_rate=body['learning_rate'], batch_size=body['batch_size']).update_one(set__status=True, set__time_finished=datetime.datetime.now(datetime.UTC), set__run_time=run_time, set__accuracy=accuracy)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
-channel.basic_consume(queue='task', on_message_callback=callback) # Setup behavior cua channel
-thread = Thread(target=channel.start_consuming, daemon=True) # Setup behavior cua worker
-thread.start() # Bao worker bat dau lam viec
+channel.basic_consume(queue='task', on_message_callback=callback)
+thread = Thread(target=channel.start_consuming, daemon=True)
+thread.start()
 
-load_dotenv()
 connect_to_db()
+print("DB connected")
 
 @app.route('/')
 def home():
@@ -73,7 +71,7 @@ def create_job():
                 exchange='',
                 routing_key='task',
                 body=json.dumps(data), # Data sent to worker is CLEANED
-                properties=pika.BasicProperties(delivery_mode=2)  # make message persistent / same as above
+                properties=pika.BasicProperties(delivery_mode=2)
             )
     except ValidationError as e:
         return make_response(jsonify({'message': e.message}))
@@ -100,12 +98,13 @@ def find_job():
     epochs = int(request.args.get('epochs'))
     learning_rate = float(request.args.get('learning_rate'))
     batch_size = int(request.args.get('batch_size'))
-    job = Job.objects(epochs=epochs, learning_rate=learning_rate, batch_size=batch_size).first() # Guaranteed to be a finished job
+    job = Job.objects(epochs=epochs, learning_rate=learning_rate, batch_size=batch_size).first()
     response = make_response(jsonify({
         'data': job.to_json()
     }))
     return response
 
+print("calling main")
 if __name__ == '__main__':
-    socketio.run(app, port=9000)
-    
+    print("host specification added")
+    socketio.run(app, host='0.0.0.0', port=9000, allow_unsafe_werkzeug=True) # Workaround to disable error

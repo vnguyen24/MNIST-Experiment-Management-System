@@ -17,7 +17,8 @@ from mongoengine import connect, get_connection
 import os
 
 def connect_to_db():
-    connect(host=os.getenv('MONGO_URI'))
+    print(f"Checking if environment variable exists: {os.getenv('MONGODB_CONNSTRING')}")
+    connect(host=os.getenv('MONGODB_CONNSTRING'))
     client = get_connection()
     try:
         client.admin.command('ping')
