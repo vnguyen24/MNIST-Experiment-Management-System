@@ -33,7 +33,7 @@ channel.basic_qos(prefetch_count=1)
 def callback(ch, method, properties, body):
     body = json.loads(body) # Convert to Python dict
     print(" Received %s" % body)
-    print(" Start experiment")
+    # print(" Start experiment")
     manager.start_experiment(body)
     # Job.objects(epochs=body['epochs'], learning_rate=body['learning_rate'], batch_size=body['batch_size']).update_one(set__status=True, set__time_finished=datetime.datetime.now(datetime.UTC), set__run_time=run_time, set__accuracy=accuracy)
     ch.basic_ack(delivery_tag=method.delivery_tag)
@@ -96,7 +96,7 @@ def get_jobs():
 
 @app.get('/find-job')
 def find_job():
-    print(f"find-job called with response: {request.args}")
+    # print(f"find-job called with response: {request.args}")
     epochs = int(request.args.get('epochs'))
     learning_rate = float(request.args.get('learning_rate'))
     batch_size = int(request.args.get('batch_size'))
