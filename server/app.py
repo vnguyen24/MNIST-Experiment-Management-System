@@ -15,8 +15,8 @@ from dotenv import load_dotenv
 import datetime
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://mnist-tuner.netlify.app"}})
-socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
+CORS(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 manager = Manager(socketio)
 
 # RabbitMQ connection
