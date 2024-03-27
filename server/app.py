@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 import datetime
 
 app = Flask(__name__)
-CORS(app) # By default gives access to all origins
+CORS(app, resources={r"/*": {"origins": "https://mnist-tuner.netlify.app"}})
 socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
 manager = Manager(socketio)
 
