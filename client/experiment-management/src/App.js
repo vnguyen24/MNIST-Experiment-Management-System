@@ -66,6 +66,7 @@ function App() {
 			socket.off('response', handleResponse);
 			socket.off('experiment_done', handleExperimentDone);
 		};
+		// eslint-disable-next-line
 	}, []);
 
 	const submitJob = () => {
