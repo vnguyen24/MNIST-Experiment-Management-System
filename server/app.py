@@ -82,7 +82,7 @@ def create_job():
         'message': message,
         'data': job_json
     }), 200)
-    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    # response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
     return response
 
 @app.get('/get-jobs')
