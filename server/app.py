@@ -23,7 +23,10 @@ manager = Manager(socketio)
 try:
     print("Trying connection")
     credentials = pika.PlainCredentials('guest', 'guest')
-    conn = pika.BlockingConnection(pika.ConnectionParameters(host="render-rabbitmq", port=5672))
+    conn = pika.BlockingConnection(pika.ConnectionParameters(
+        host="render-rabbitmq-02f2",
+        port=5672,
+        credentials=credentials))
 except pika.exceptions.AMQPConnectionError as exc:
     print(f"Error message: {exc}")
     print("Failed to connect to RabbitMQ service. Message wont be sent.")
