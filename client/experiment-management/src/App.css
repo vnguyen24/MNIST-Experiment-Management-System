@@ -10,6 +10,7 @@ body {
 	display: flex;
 	border: 1px solid black;
 	flex-direction: column;
+	background-color: #dce9e5;
 
 	.top-container {
 		display: flex;
@@ -62,6 +63,7 @@ body {
 					border: 2px solid black; */
 					height: 100%;
 					width: 80%;
+					background-color: whitesmoke;
 				}
 			}
 		}
@@ -93,11 +95,12 @@ body {
 					display: flex;
 					flex-direction: column;
 					margin: 1px;
-					border: 2px solid black;
+					border: 2px solid #356168;
 					border-radius: 20px;
 					padding: 5px;
 					height: 90%;
 					width: 70%;
+					background-color: whitesmoke;
 				}
 			}
 
@@ -116,6 +119,7 @@ body {
 					border: 2px solid black; */
 					height: 50%;
 					width: 40%;
+					color: #356168;
 				}
 
 				.progress-bar-comp {

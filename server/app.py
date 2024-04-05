@@ -12,23 +12,21 @@ from db.database import connect_to_db
 from db.models.job import Job
 from mongoengine import ValidationError
 from dotenv import load_dotenv
-import datetime
 
 app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 manager = Manager(socketio)
+load_dotenv()
+connect_to_db()
 
 # RabbitMQ connection
 try:
     print("Trying connection")
-    credentials = pika.PlainCredentials('guest', 'guest')
-    conn = pika.BlockingConnection(pika.ConnectionParameters(
-        host="render-rabbitmq-02f2",
-        port=5672,
-        credentials=credentials))
+    url = os.getenv('CLOUDAMQP_URL')
+    params = pika.URLParameters(url)
+    conn = pika.BlockingConnection(params)
 except pika.exceptions.AMQPConnectionError as exc:
-    print(f"Error message: {exc}")
     print("Failed to connect to RabbitMQ service. Message wont be sent.")
 
 # Rabbit config
@@ -48,8 +46,6 @@ channel.basic_consume(queue='task', on_message_callback=callback) # Setup behavi
 thread = Thread(target=channel.start_consuming, daemon=True) # Setup behavior cua worker
 thread.start() # Bao worker bat dau lam viec
 
-load_dotenv()
-connect_to_db()
 
 @app.route('/')
 def home():

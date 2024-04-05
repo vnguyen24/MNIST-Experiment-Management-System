@@ -1,3 +1,7 @@
+.no-message {
+	color: #356168;
+}
+
 .message-board {
 	display: flex;
 	flex-direction: column;

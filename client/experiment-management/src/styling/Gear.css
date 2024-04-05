@@ -1,6 +1,7 @@
 .gear {
 	font-size: 100px;
 	animation: rotate 4s linear infinite; /* Adjust the duration and timing function */
+	color: #356168;
 }
 
 @keyframes rotate {
