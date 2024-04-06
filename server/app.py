@@ -104,5 +104,5 @@ def find_job():
     return response
 
 if __name__ == '__main__':
-    socketio.run(app, port=9000)
+    socketio.run(app, port=9000, allow_unsafe_werkzeug=True)
     
