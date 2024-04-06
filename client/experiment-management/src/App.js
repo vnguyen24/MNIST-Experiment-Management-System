@@ -50,9 +50,6 @@ function App() {
 		};
 
 		const handleExperimentDone = (data) => {
-			// console.log(
-			// 	'Experiment completed. Reporting accuracy and updating table'
-			// );
 			findJob(data);
 			getJobs();
 		};
