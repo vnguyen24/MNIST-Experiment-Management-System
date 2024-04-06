@@ -26,7 +26,8 @@ function App() {
 	const d = new Date();
 
 	const getJobs = () => {
-		const url = `${process.env.REACT_APP_SERVER_URL}/get-jobs`;
+		console.log('getJobs called');
+		const url = `https://mnist-tuner-server.onrender.com/get-jobs`;
 		fetch(url)
 			.then((response) => response.json())
 			.then((data) => {

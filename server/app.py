@@ -1,8 +1,6 @@
 import json
 from flask import Flask, jsonify, request, make_response
-from flask_socketio import SocketIO
 import os
-from experiment_manager.manager import Manager
 from flask_cors import CORS
 import pika
 from threading import Thread
@@ -13,8 +11,6 @@ from dotenv import load_dotenv
 
 app = Flask(__name__)
 CORS(app)
-socketio = SocketIO(app, cors_allowed_origins="*")
-manager = Manager(socketio)
 load_dotenv()
 connect_to_db()
 
@@ -29,27 +25,12 @@ except pika.exceptions.AMQPConnectionError as exc:
 
 # Rabbit config
 print("Connection successful")
-channel = conn.channel()
-channel.queue_declare(queue='task', durable=True)
-channel.basic_qos(prefetch_count=1)
-
-def callback(ch, method, properties, body):
-    body = json.loads(body) # Convert to Python dict
-    print(" Received %s" % body)
-    manager.start_experiment(body)
-    ch.basic_ack(delivery_tag=method.delivery_tag)
-
-channel.basic_consume(queue='task', on_message_callback=callback) # Setup behavior cua channel
-thread = Thread(target=channel.start_consuming, daemon=True) # Setup behavior cua worker
-thread.start() # Bao worker bat dau lam viec
-
 
 @app.route('/')
 def home():
     return 'Welcome to the Flask server'
 
-@app.post('/create-job')
-def create_job():
+
     def initialize_key(key):
         d = {'epochs':5, 'batch_size':64, 'learning_rate':0.003}
         try:
@@ -92,8 +73,7 @@ def get_jobs():
     }))
     return response
 
-@app.get('/find-job')
-def find_job():
+
     epochs = int(request.args.get('epochs'))
     learning_rate = float(request.args.get('learning_rate'))
     batch_size = int(request.args.get('batch_size'))
@@ -104,5 +84,5 @@ def find_job():
     return response
 
 if __name__ == '__main__':
-    socketio.run(app, port=9000, allow_unsafe_werkzeug=True)
+    Flask.run(app, port=9000)
     
