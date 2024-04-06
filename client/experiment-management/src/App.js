@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './App.css';
 
-const socket = io('http://localhost:9000');
+const socket = io(`${process.env.REACT_APP_SERVER_URL}`);
 
 function App() {
 	const [progressData, setProgressData] = useState({
@@ -26,7 +26,7 @@ function App() {
 	const d = new Date();
 
 	const getJobs = () => {
-		const url = 'http://localhost:9000/get-jobs';
+		const url = `${process.env.REACT_APP_SERVER_URL}/get-jobs`;
 		fetch(url)
 			.then((response) => response.json())
 			.then((data) => {
@@ -67,7 +67,7 @@ function App() {
 	}, []);
 
 	const submitJob = () => {
-		const url = 'http://localhost:9000/create-job';
+		const url = `${process.env.REACT_APP_SERVER_URL}/create-job`;
 		const options = {
 			method: 'POST',
 			headers: {
@@ -110,7 +110,7 @@ function App() {
 
 	const findJob = (params) => {
 		const queryParams = new URLSearchParams(params).toString();
-		const url = `http://localhost:9000/find-job?${queryParams}`;
+		const url = `${process.env.REACT_APP_SERVER_URL}/find-job?${queryParams}`;
 
 		const options = {
 			method: 'GET',
