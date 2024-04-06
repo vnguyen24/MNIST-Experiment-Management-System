@@ -41,6 +41,7 @@ function App() {
 	};
 
 	useEffect(() => {
+		console.log('useEffect triggered');
 		const handleResponse = (data) => {
 			const { time, total_progress } = data;
 			setProgressData({
@@ -54,9 +55,15 @@ function App() {
 			getJobs();
 		};
 
+		console.log('starting response socket');
 		socket.on('response', handleResponse);
+		console.log('response socket established');
+		console.log('starting experiment_done socket');
 		socket.on('experiment_done', handleExperimentDone);
+		console.log('experiment_done socket established');
+		console.log('getting data table');
 		getJobs();
+		console.log('data table loaded');
 
 		return () => {
 			// Not sure if needed
