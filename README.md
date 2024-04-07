@@ -5,4 +5,26 @@ A Fullstack web application that serves as an experiment tracking tool, which al
 ![MNIST UI Design-2](https://github.com/vnguyen24/MNIST-Experiment-Management-System/assets/75783251/86525381-4fb2-4c65-9cd4-7d502bd427fd)
 
 # Dev journal
-A record of my developement journey, everything from progress, bugs, to struggles and breakthroughs. It's mostly for me to reflect on everyday and treasure how far I have come. If you are remotely interested, definitely check out me talking to myself :) [JOURNAL](https://github.com/vnguyen24/MNIST-Experiment-Management-System/blob/main/JOURNAL.md)
+A record of my developement journey, everything from progress, bugs, to struggles and breakthroughs. It's mostly for me to reflect on everyday and treasure how far I have come. If you are remotely interested, definitely check out me talking to myself :)
+[JOURNAL](https://github.com/vnguyen24/MNIST-Experiment-Management-System/blob/main/JOURNAL.md)
+
+# Contributors
+- Cuong Nguyen
+- Anh Phan [Github link](https://github.com/duyanh131212)
+
+# Features
+- Simple form: A form to submit job configurations, implemented with input validity checks.
+- Message board: A notification interface to help users understand the current process. Message content includes confirmation of job submission and report of submitted jobs (both in queue and finished).
+- Progress bar: A progress bar that shows users training progress in real time!
+- Job board: A table of 10 best job configurations that gets updated everytime a training + evaluation cycle finishes.
+
+# Technologies
+- Frontend: React.js, Bootstrap, React Bootstrap
+- Backend: Python, Flask, Flask-SocketIO, pika, CORS, MongoEngine, PyTorch, Threading
+- Database: MongoDB
+- JobQueue: RabbitMQ
+- Hosing service: Netlify, Render, CloudAMQP
+- Misc (Things I used but unsure how to classify): Docker, Postman, Werkzeug, gunicorn, waitress, eventlet, gevent, kombu
+
+## Note to myself
+Everyone needs to take a first step. This is your true first step. Don't forget that!
