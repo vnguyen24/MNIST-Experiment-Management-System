@@ -41,7 +41,6 @@ function App() {
 	};
 
 	useEffect(() => {
-		console.log('useEffect triggered');
 		const handleResponse = (data) => {
 			const { time, total_progress } = data;
 			setProgressData({
@@ -55,15 +54,9 @@ function App() {
 			getJobs();
 		};
 
-		console.log('starting response socket');
 		socket.on('response', handleResponse);
-		console.log('response socket established');
-		console.log('starting experiment_done socket');
 		socket.on('experiment_done', handleExperimentDone);
-		console.log('experiment_done socket established');
-		console.log('getting data table');
 		getJobs();
-		console.log('data table loaded');
 
 		return () => {
 			// Not sure if needed
@@ -90,10 +83,8 @@ function App() {
 		fetch(url, options)
 			.then((response) => response.json())
 			.then((data) => {
-				// console.log(data.message);
 				let messageContent = data.message;
 				const job = JSON.parse(data.data);
-				// console.log(job);
 				if (job !== null) {
 					if (job.status === true) {
 						// status only true if job is done + updated to table
@@ -126,9 +117,7 @@ function App() {
 		fetch(url, options)
 			.then((response) => response.json())
 			.then((data) => {
-				// console.log(data);
 				const job = JSON.parse(data.data);
-				// console.log(job);
 				const messageContent = `Job configuration {epochs: ${job.epochs}, learning_rate: ${job.learning_rate}, batch_size: ${job.batch_size}} finished in ${job.run_time} seconds. Calculated accuracy: ${job.accuracy}%`;
 				const doneMessage = {
 					time: d.toLocaleTimeString(),
