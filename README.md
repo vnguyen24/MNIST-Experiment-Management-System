@@ -5,4 +5,4 @@ A Fullstack web application that serves as an experiment tracking tool, which al
 ![MNIST UI Design-2](https://github.com/vnguyen24/MNIST-Experiment-Management-System/assets/75783251/86525381-4fb2-4c65-9cd4-7d502bd427fd)
 
 # Dev journal
-A record of my developement journey, everything from progress, bugs, to struggles and breakthroughs. It's mostly for me to reflect on everyday and treasure how far I have come. If you are remotely interested, definitely check out me talking to myself :) ![JOURNAL](https://github.com/vnguyen24/MNIST-Experiment-Management-System/blob/main/JOURNAL.md)
+A record of my developement journey, everything from progress, bugs, to struggles and breakthroughs. It's mostly for me to reflect on everyday and treasure how far I have come. If you are remotely interested, definitely check out me talking to myself :) https://github.com/vnguyen24/MNIST-Experiment-Management-System/blob/main/JOURNAL.md
