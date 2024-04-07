@@ -25,6 +25,3 @@ A record of my developement journey, everything from progress, bugs, to struggle
 - JobQueue: RabbitMQ
 - Hosing service: Netlify, Render, CloudAMQP
 - Misc (Things I used but unsure how to classify): Docker, Postman, Werkzeug, gunicorn, waitress, eventlet, gevent, kombu
-
-## Note to myself
-Everyone needs to take a first step. This is your true first step. Don't forget that!
