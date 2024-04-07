@@ -6,7 +6,7 @@ A Fullstack web application that serves as an experiment tracking tool, which al
 
 # Dev journal
 A record of my developement journey, everything from progress, bugs, to struggles and breakthroughs. It's mostly for me to reflect on everyday and treasure how far I have come. If you are remotely interested, definitely check out me talking to myself :)
-\n[JOURNAL](https://github.com/vnguyen24/MNIST-Experiment-Management-System/blob/main/JOURNAL.md)
+[JOURNAL](https://github.com/vnguyen24/MNIST-Experiment-Management-System/blob/main/JOURNAL.md)
 
 # Contributors
 - Cuong Nguyen
