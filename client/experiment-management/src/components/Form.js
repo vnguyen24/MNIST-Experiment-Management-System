@@ -79,7 +79,7 @@ const SimpleForm = ({
 	};
 
 	return (
-		<div className='h-100 d-inline-block w-100 p-3 border border-black border-5'>
+		<div className='form h-100 d-inline-block w-100 p-3 border border-5'>
 			<div>
 				<Form className='h-100 w-100'>
 					<Form.Group className='my-3'>

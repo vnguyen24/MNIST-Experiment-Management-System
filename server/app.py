@@ -1,31 +1,34 @@
 import json
 from flask import Flask, jsonify, request, make_response
 from flask_socketio import SocketIO
-import sys, os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from server.experiment_manager.manager import Manager
+import os
+from experiment_manager.manager import Manager
 from flask_cors import CORS
 import pika
-import threading
 from threading import Thread
 from db.database import connect_to_db
 from db.models.job import Job
 from mongoengine import ValidationError
 from dotenv import load_dotenv
-import datetime
 
 app = Flask(__name__)
-CORS(app) # By default gives access to all origins
-socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
+CORS(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 manager = Manager(socketio)
+load_dotenv()
+connect_to_db()
 
 # RabbitMQ connection
 try:
-    conn = pika.BlockingConnection(pika.ConnectionParameters(host="localhost", port=5672))
+    print("Trying connection")
+    url = os.getenv('CLOUDAMQP_URL')
+    params = pika.URLParameters(url)
+    conn = pika.BlockingConnection(params)
 except pika.exceptions.AMQPConnectionError as exc:
     print("Failed to connect to RabbitMQ service. Message wont be sent.")
 
 # Rabbit config
+print("Connection successful")
 channel = conn.channel()
 channel.queue_declare(queue='task', durable=True)
 channel.basic_qos(prefetch_count=1)
@@ -33,17 +36,13 @@ channel.basic_qos(prefetch_count=1)
 def callback(ch, method, properties, body):
     body = json.loads(body) # Convert to Python dict
     print(" Received %s" % body)
-    print(" Start experiment")
     manager.start_experiment(body)
-    # Job.objects(epochs=body['epochs'], learning_rate=body['learning_rate'], batch_size=body['batch_size']).update_one(set__status=True, set__time_finished=datetime.datetime.now(datetime.UTC), set__run_time=run_time, set__accuracy=accuracy)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_consume(queue='task', on_message_callback=callback) # Setup behavior cua channel
 thread = Thread(target=channel.start_consuming, daemon=True) # Setup behavior cua worker
 thread.start() # Bao worker bat dau lam viec
 
-load_dotenv()
-connect_to_db()
 
 @app.route('/')
 def home():
@@ -82,7 +81,6 @@ def create_job():
         'message': message,
         'data': job_json
     }), 200)
-    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
     return response
 
 @app.get('/get-jobs')
@@ -96,7 +94,6 @@ def get_jobs():
 
 @app.get('/find-job')
 def find_job():
-    print(f"find-job called with response: {request.args}")
     epochs = int(request.args.get('epochs'))
     learning_rate = float(request.args.get('learning_rate'))
     batch_size = int(request.args.get('batch_size'))
@@ -107,5 +104,5 @@ def find_job():
     return response
 
 if __name__ == '__main__':
-    socketio.run(app, port=9000)
+    socketio.run(app, port=9000, allow_unsafe_werkzeug=True)
     

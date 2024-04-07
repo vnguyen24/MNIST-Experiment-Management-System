@@ -9,7 +9,7 @@ const ProgressBar = ({ progressData }) => {
 	}
 
 	return (
-		<div className='progress-bar h-100 w-100 border border-black border-3'>
+		<div className='progress-bar h-100 w-100 border border-3'>
 			{Array.from({ length: 20 }, (_, index) => (
 				<div
 					key={index}

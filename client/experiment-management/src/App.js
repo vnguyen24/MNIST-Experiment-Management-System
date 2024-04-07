@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './App.css';
 
-const socket = io('http://localhost:9000');
+const socket = io(`${process.env.REACT_APP_SERVER_URL}`);
 
 function App() {
 	const [progressData, setProgressData] = useState({
@@ -26,7 +26,7 @@ function App() {
 	const d = new Date();
 
 	const getJobs = () => {
-		const url = 'http://localhost:9000/get-jobs';
+		const url = `${process.env.REACT_APP_SERVER_URL}/get-jobs`;
 		fetch(url)
 			.then((response) => response.json())
 			.then((data) => {
@@ -41,6 +41,7 @@ function App() {
 	};
 
 	useEffect(() => {
+		console.log('useEffect triggered');
 		const handleResponse = (data) => {
 			const { time, total_progress } = data;
 			setProgressData({
@@ -50,26 +51,30 @@ function App() {
 		};
 
 		const handleExperimentDone = (data) => {
-			console.log(
-				'Experiment completed. Reporting accuracy and updating table'
-			);
 			findJob(data);
 			getJobs();
 		};
 
+		console.log('starting response socket');
 		socket.on('response', handleResponse);
+		console.log('response socket established');
+		console.log('starting experiment_done socket');
 		socket.on('experiment_done', handleExperimentDone);
+		console.log('experiment_done socket established');
+		console.log('getting data table');
 		getJobs();
+		console.log('data table loaded');
 
 		return () => {
 			// Not sure if needed
 			socket.off('response', handleResponse);
 			socket.off('experiment_done', handleExperimentDone);
 		};
+		// eslint-disable-next-line
 	}, []);
 
 	const submitJob = () => {
-		const url = 'http://localhost:9000/create-job';
+		const url = `${process.env.REACT_APP_SERVER_URL}/create-job`;
 		const options = {
 			method: 'POST',
 			headers: {
@@ -85,10 +90,10 @@ function App() {
 		fetch(url, options)
 			.then((response) => response.json())
 			.then((data) => {
-				console.log(data.message);
+				// console.log(data.message);
 				let messageContent = data.message;
 				const job = JSON.parse(data.data);
-				console.log(job);
+				// console.log(job);
 				if (job !== null) {
 					if (job.status === true) {
 						// status only true if job is done + updated to table
@@ -112,7 +117,7 @@ function App() {
 
 	const findJob = (params) => {
 		const queryParams = new URLSearchParams(params).toString();
-		const url = `http://localhost:9000/find-job?${queryParams}`;
+		const url = `${process.env.REACT_APP_SERVER_URL}/find-job?${queryParams}`;
 
 		const options = {
 			method: 'GET',
@@ -121,9 +126,9 @@ function App() {
 		fetch(url, options)
 			.then((response) => response.json())
 			.then((data) => {
-				console.log(data);
+				// console.log(data);
 				const job = JSON.parse(data.data);
-				console.log(job);
+				// console.log(job);
 				const messageContent = `Job configuration {epochs: ${job.epochs}, learning_rate: ${job.learning_rate}, batch_size: ${job.batch_size}} finished in ${job.run_time} seconds. Calculated accuracy: ${job.accuracy}%`;
 				const doneMessage = {
 					time: d.toLocaleTimeString(),

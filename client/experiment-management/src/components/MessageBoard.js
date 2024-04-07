@@ -5,7 +5,7 @@ import Message from './Message';
 const MessageBoard = ({ messages }) => {
 	if (!messages || messages.length === 0) {
 		return (
-			<p className='text-center fs-4 fw-medium text-decoration-underline'>
+			<p className='no-message text-center fs-4 fw-medium text-decoration-underline'>
 				This is where the system communicates with you
 			</p>
 		);

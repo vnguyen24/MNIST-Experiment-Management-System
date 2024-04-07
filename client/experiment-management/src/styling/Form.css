@@ -1,3 +1,7 @@
+.form {
+	--bs-border-color: #356168;
+}
+
 .button-container {
 	display: flex;
 	justify-content: space-evenly;
