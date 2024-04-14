@@ -2,6 +2,8 @@
 A Fullstack web application that serves as an experiment tracking tool, which allows users to tune a Deep Learning model that solves the MNIST challenge as a black box.
 
 [Link to demo video](https://drive.google.com/file/d/1GV5KCh9rq1uqbC3p_c2_enKNXFKX9xhK/view?usp=drive_link)
+
+
 ![github gif](https://github.com/vnguyen24/MNIST-Experiment-Management-System/assets/75783251/6ef0fd4e-5f91-434f-ad58-b8fd51708dbb)
 ![Experiment Management System](https://github.com/vnguyen24/MNIST-Experiment-Management-System/assets/75783251/4c365b3d-f35c-483b-93d9-e020895683ff)
 ![MNIST UI Design-1](https://github.com/vnguyen24/MNIST-Experiment-Management-System/assets/75783251/8d1c1107-34cd-43b6-9630-156fe69284d7)
